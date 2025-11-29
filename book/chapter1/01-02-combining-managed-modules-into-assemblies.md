@@ -2,8 +2,7 @@
 
 ## ⭐ Assemblies: The Real Unit of Execution in .NET
 
-Although compilers produce modules, the CLR itself never works directly with modules. Instead, it operates exclusively on **assemblies** — the true building blocks of .NET applications.
-
+Although compilers produce modules (IL + metadata), the CLR’s binding and identity unit is the assembly. At runtime, the CLR resolves types using assembly identity, while the actual code and metadata still live in one or more loaded modules (including the manifest module).
 An **assembly** is more than just a file. It is a logical container, a self-describing unit that defines:
 * What code it contains
 * What resources it owns
