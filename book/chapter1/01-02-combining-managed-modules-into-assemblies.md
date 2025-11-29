@@ -67,7 +67,7 @@ Modules (IL + metadata)
 = Assembly
 ```
 
-The **Manifest** becomes the key. It is "metadata about the metadata" — describing every file, type, and version inside the assembly.
+The **Manifest** becomes the key. It is assembly-level metadata — describing the assembly’s identity, referenced assemblies, contained files (when applicable), and exported/forwarded types.
 
 Today, most developers don’t invoke `AL.exe` directly. The **.NET SDK**, **MSBuild**, and **Roslyn** hide all of this complexity and produce assemblies automatically.
 
@@ -81,14 +81,12 @@ The manifest stores crucial metadata:
 * 🔐 Hashing and integrity information
 * 🗺️ Resource mapping
 
-**In modern .NET, the manifest is also used by:**
-* The linker and trimmer
-* Single-file bundling
-* ReadyToRun code generation
-* NativeAOT compilation
-* `AssemblyLoadContext` isolation
+**In modern .NET, this assembly metadata participates in:**
+* Publish-time analysis (linker/trimmer) over **IL + metadata + references**
+* Single-file bundling (packaging), and ReadyToRun/NativeAOT publish pipelines
+* Runtime loading decisions via the host (e.g., .deps.json + host policy), and optional isolation/unloadability via AssemblyLoadContext (application-controlled loading)
 
-It is the mechanism that keeps .NET deployment consistent and self-contained — no registry, no COM registration, no “DLL Hell.”
+It is the mechanism that keeps .NET deployment consistent and self-contained — no registry, no COM registration, and dramatically less classic system-wide “DLL Hell” (though dependency/version conflicts can still happen within an app’s graph).
 
 ## ⭐ Why .NET Needs Assemblies (Even in 2025)
 
@@ -134,17 +132,8 @@ them into auxiliary files that are retrieved on demand or included only in speci
 If a user never invokes the associated feature, the corresponding files are never loaded into memory
 or even downloaded, reducing installation size, minimizing I/O overhead, and improving startup time.
 
-Despite the physical separation, all files remain bound together through the assembly’s manifest.
-The manifest defines a unified identity, version, and security boundary for the entire logical assembly,
-ensuring that late-loaded modules are still validated, version-checked, and bound consistently with the
-application’s original dependency graph. The CLR treats all constituent files—whether loaded eagerly
-or lazily—as a single, coherent component with well-defined visibility rules and versioning semantics.
+Despite the physical separation, consistency is achieved through assembly identities + references and the application’s deployment metadata (notably .deps.json) and host binding policy. Each optional component (plugin assembly or *.resources.dll) has its own manifest and version, but the app can enforce compatibility by controlling which versions are deployed and loaded.
 
-In modern .NET (Core, 5–9), this design works seamlessly with advanced deployment models such
-as single-file publishing, ReadyToRun images, trimming, and NativeAOT. Even when the physical
-structure of a deployed application changes—merged into one file, optimized to native code, or split
-across multiple bundles—the logical assembly identity described by the manifest remains intact. This
-preserves compatibility with reflection, security policies, and assembly binding rules, while still giving
-developers the flexibility to modularize and optimize deployment in ways that were not possible in
-the early CLR era.
+For localization, the runtime probes and loads satellite resource assemblies based on the current culture. For plugins, applications typically load optional assemblies on demand, optionally isolating them with AssemblyLoadContext to control dependency conflicts and unloadability (where supported).
 
+Modern deployment modes (single-file publish, trimming, ReadyToRun, NativeAOT) can change the physical packaging and what metadata remains available, but the core model stays: assemblies remain the unit of identity/versioning, while optional functionality is usually delivered as separate assemblies/resources loaded as needed.
