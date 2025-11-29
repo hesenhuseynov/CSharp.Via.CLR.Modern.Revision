@@ -21,24 +21,26 @@ This is a point that many developers misunderstand when starting with .NET:
 flowchart LR
     subgraph Inputs ["Inputs"]
         SC["Source Code (.cs/.vb)"]
-        RES["Resources (.png, .json)"]
+        RES["Assets (embedded resources / content files)"]
     end
 
-    subgraph Tool ["Compilation & Linking"]
-        C1["Compiler (Roslyn) / MSBuild"]
-    end
-
-    subgraph Output ["Final Assembly (Logical Unit)"]
+    subgraph Tool ["Build Pipeline"]
         direction TB
-        MAN["📂 MANIFEST (The Brain)"]
-        IL["📄 IL Code"]
-        META["📊 Metadata"]
-        R_OUT["🖼️ Resources"]
+        C1["Compiler (Roslyn)"]
+        B1["MSBuild / SDK (packaging)"]
+    end
+
+    subgraph Output ["Assembly (.dll/.exe) — physical file & logical identity"]
+        direction TB
+        MAN["📂 Manifest (assembly-level metadata)"]
+        MOD["📦 Module (IL + Metadata)"]
+        R_OUT["🖼️ Embedded resources / content mapping"]
     end
 
     SC --> C1
-    RES --> C1
-    C1 --> Output
+    C1 --> B1
+    RES --> B1
+    B1 --> Output
     
     style MAN fill:#f9f,stroke:#333,stroke-width:2px,color:black
     style Output fill:#e1f5fe,stroke:#333,stroke-width:2px,color:black
