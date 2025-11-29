@@ -51,7 +51,7 @@ You may physically have:
 * **One .dll file** → 1 assembly (Standard)
 * ** One manifest .dll/.exe + one or more separate .netmodule files → 1 logical assembly (Legacy/Rare)
 * ** A single-file published app can bundle many assemblies into one physical file; they remain logically separate assemblies, and the runtime loads them from the bundle (sometimes extracting, depending on publish settings).
-* **A NativeAOT app** → No IL at all, yet the concept of an assembly still existed at build time
+* **A NativeAOT app ships primarily as native code rather than IL; the assembly concept still exists at build/publish time, but reflection and dynamic loading behaviors may be reduced depending on trimming/AOT constraints.
 
 This clear separation allows .NET to scale into scenarios the original CLR design never anticipated.
 
