@@ -49,7 +49,7 @@ flowchart LR
 
 You may physically have:
 * **One .dll file** → 1 assembly (Standard)
-* **One .dll containing multiple .netmodules** → 1 assembly (Legacy/Rare)
+* **One manifest .dll/.exe + one or more separate .netmodule files → 1 logical assembly (Legacy/Rare)
 * **A single-file published app** bundling dozens of assemblies → “Physically” 1 file, but “Logically” many assemblies
 * **A NativeAOT app** → No IL at all, yet the concept of an assembly still existed at build time
 
