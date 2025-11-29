@@ -56,8 +56,6 @@ Each file is written to be readable directly on GitHub.
 ## 🧭 Status
 
 This is an **in-progress** project. Chapters evolve as I learn and verify more details.
-Feedback, issues, and corrections are welcome.
-
 
 
 
