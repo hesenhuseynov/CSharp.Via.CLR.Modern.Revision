@@ -7,7 +7,7 @@ An **assembly** is more than just a file. It is a logical container, a self-desc
 * What code it contains
 * What resources it owns
 * What external components it requires
-* Under what version, culture, and security context it should be loaded
+* Under what name, version, culture, and (optionally) signing/integrity characteristics it should be identified and bound
 
 > **Key Takeaway:** When you think of a “component” in .NET, you are really thinking of an **assembly**.
 
