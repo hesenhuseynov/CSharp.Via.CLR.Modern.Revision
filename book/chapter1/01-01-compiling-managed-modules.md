@@ -1,159 +1,159 @@
-Chapter 1 – The CLR’s Execution Model
+# Chapter 1 – The CLR’s Execution Model  
+*(Original + Modern Notes)*
 
-(Original + Modern Notes)
+---
 
-1.1 Compiling Source Code into Managed Modules
-Original Text (from CLR via C#)
+## 1.1 Compiling Source Code into Managed Modules  
+### Original Text  
+*(Preserved as-is.)*
 
-(Left intentionally unchanged.)
+---
 
-1.1 Compiling Source Code into Managed Modules — Modern .NET 8/9 Edition
+## 1.1 Compiling Source Code into Managed Modules — Modern .NET 8/9 Edition
 
-Modern .NET (versions 5–9) continues to follow the same architectural model introduced by the original CLR:
-high-level languages targeting .NET compile source code into Intermediate Language (IL) and metadata, which together form a managed module.
-While the concept is unchanged, the modern runtime introduces cross-platform support, Roslyn tooling, and advanced JIT optimizations.
+Modern .NET (versions 5–9) still follows the foundational model introduced by the original CLR:  
+high-level languages targeting .NET compile source code into **Intermediate Language (IL)** together with **metadata**.  
+These two structures form a **managed module** — the fundamental unit consumed by the runtime.
 
-✔ Cross-Platform Module Formats
+While the core idea is unchanged, modern .NET expands the model through:
 
-In .NET Framework, every managed module was a PE file.
+- Cross-platform execution  
+- Roslyn compiler platform  
+- Tiered JIT optimizations  
+- On-Stack Replacement (OSR)  
+- NativeAOT (optional IL-free execution)
+
+---
+
+## ⚙️ Cross-Platform Module Formats
+
+In .NET Framework, all modules were PE files.  
 In modern .NET, the file format depends on the OS:
 
-Platform	Module Format
-Windows	PE32 / PE32+
-Linux	ELF
-macOS	Mach-O
+| Platform | Module Format |
+|----------|----------------|
+| Windows  | PE32 / PE32+   |
+| Linux    | ELF            |
+| macOS    | Mach-O         |
 
-Additional notes:
+**Additional notes:**
+- Single-file publishing may bundle & extract modules dynamically  
+- NativeAOT can remove IL entirely and produce a fully native binary  
 
-Single-file publishing may bundle & extract modules dynamically
+> So the statement **“a managed module is always a PE file”** is now Windows-specific.
 
-NativeAOT eliminates IL entirely → generates a fully native binary
+---
 
-So the old statement “a managed module is always a PE file” is now Windows-specific.
+## 🧩 Languages Targeting the CLR Today
 
-✔ Languages Targeting the CLR Today
+### ✔ Actively maintained
+- C# (Roslyn)  
+- F#  
+- Visual Basic  
+- IL Assembler (`ilasm.exe`)  
 
-Actively maintained:
+### ❌ No longer maintained
+- IronPython  
+- IronRuby  
 
-C# (Roslyn)
+### ❌ C++/CLI
+- Windows-only  
+- .NET Framework only  
+- *Not part of .NET 5–9*
 
-F#
+### ✔ Modern .NET instead uses
+- P/Invoke  
+- Reverse P/Invoke  
+- Function pointers (`delegate*`)  
+- NativeAOT interop  
 
-Visual Basic
+---
 
-IL Assembler (ilasm.exe)
+## 🔧 Modern Compilation Pipeline
 
-Legacy / no longer maintained:
+All modern .NET compilers:
 
-IronPython
+1. Parse & analyze syntax  
+2. Perform semantic analysis  
+3. Generate IL  
+4. Emit metadata  
+5. Produce a **managed module**
 
-IronRuby
-
-C++/CLI → Windows-only (.NET Framework only)
-
-Modern .NET instead uses:
-
-P/Invoke
-
-Reverse P/Invoke
-
-Function pointers (delegate*)
-
-NativeAOT interop
-
-✔ Modern Compilation Pipeline (Roslyn Era)
-
-All modern .NET compilers follow the same high-level pipeline:
-
-Parse source code
-
-Validate syntax and semantics
-
-Generate IL
-
-Emit metadata
-
-Produce a managed module (DLL/EXE)
-
-Compilation flows:
+### Pipelines:
 
 C# → Roslyn → IL + Metadata → Managed Module
 F# → F# Compiler → IL + Metadata
 IL → ilasm.exe → IL + Metadata
 
-✔ IL + Metadata: The Runtime Foundation
+yaml
+Copy code
 
-(This hissəni xüsusi olaraq sən istədiyinə görə geri əlavə etdim — “qəşəng idi yox etmisən” dediyin hissə budur.)
+---
 
-A managed module contains:
+## 📦 IL + Metadata: Runtime Foundation
 
-IL (CPU-agnostic, verifiable instruction set)
+Managed modules contain:
 
-Metadata (types, signatures, generics, attributes, references)
+- IL (CPU-agnostic instructions)  
+- Metadata (types, signatures, members, generics, assembly refs)  
+- Optional embedded resources  
 
-Optional resources
+These enable:
 
-These allow the CLR to provide:
+- JIT compilation  
+- Reflection  
+- Runtime type checking  
+- GC root tracking  
+- Debugging  
+- Serialization  
+- Dynamic code generation  
 
-JIT compilation
+> Metadata replaced COM Type Libraries and is richer & language-neutral.
 
-Reflection
+---
 
-Runtime type checking
+## ⚔️ Managed vs Native Compilation
 
-GC root identification
+**Native languages (C++, Rust):**
+→ compile directly to machine code.
 
-Serialization
+**Managed languages (C#, F#, VB):**
+→ compile to IL + metadata.
 
-Debugging
+CLR then:
 
-Dynamic code generation
+- Loads IL  
+- Verifies it  
+- JIT-compiles it  
+- Applies Tiered JIT  
+- May reoptimize hot code paths via OSR  
 
-Metadata effectively replaced COM Type Libraries — it is richer, language-neutral, and essential for modern runtime services.
+This model provides:
 
-✔ Managed vs Native Compilation
+- ✔ Portability  
+- ✔ Safety  
+- ✔ High performance  
 
-Native languages (C++, Rust) → compile directly to machine code.
+---
 
-Managed languages compile to IL, which is:
+## 🔐 Security (DEP, ASLR)
 
-verified
+Operating systems enforce:
 
-JIT-compiled into CPU-specific instructions
+- **DEP** — Data Execution Prevention  
+- **ASLR** — Address Space Layout Randomization  
 
-optimized dynamically via Tiered JIT
+CLR integrates with them automatically.
 
-re-optimized via On-Stack Replacement (OSR)
+---
 
-Result:
+## 📝 Summary
 
-Portability
+Modern .NET preserves the original CLR design while expanding it through:
 
-Runtime-driven optimizations
+- Cross-platform module formats  
+- The Roslyn compiler platform  
+- Tiered JIT & OSR  
+- NativeAOT for IL-free execution  
 
-High performance on long-running workloads
-
-✔ Security Notes: DEP & ASLR
-
-Modern security features:
-
-DEP (Data Execution Prevention)
-
-ASLR (Address Space Layout Randomization)
-
-…are enforced by the operating system.
-The CLR integrates automatically — no manual configuration required.
-
-Summary
-
-While the core CLR architecture remains intact, modern .NET extends it with:
-
-full cross-platform module support
-
-the Roslyn compiler platform
-
-Tiered JIT + OSR optimizations
-
-NativeAOT for IL-free native binaries
-
-Yet at the center of everything, the managed module (IL + metadata) remains the fundamental building block of .NET execution.
+The **managed module — IL + metadata** remains the core building block of .NET execution.
