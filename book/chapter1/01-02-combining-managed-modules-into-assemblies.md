@@ -1,4 +1,4 @@
-# 1.2 Combining Managed Modules into Assemblies — Expanded + Modernized Author Edition
+  # 1.2 Combining Managed Modules into Assemblies — Expanded + Modernized Author Edition
 
 ## ⭐ Assemblies: The Real Unit of Execution in .NET
 
@@ -119,14 +119,13 @@ One of the most painful drawbacks of classic Windows programming was COM registr
 * ✅ **No COM/ActiveX dependencies**
 * ✅ **No GAC conflicts** (in .NET Core+ the GAC is gone)
 
-The entire dependency graph is inside the assembly itself. This is why deployment in modern .NET is radically simpler than in .NET Framework or COM.
+An assembly records references to other assemblies, but in modern .NET the full dependency graph and binding decisions are also driven by deployment metadata (notably .deps.json) and the hosting/binding policy. This is why deployment in modern .NET is radically simpler than in .NET Framework or COM.
 
 ### On-demand and modular deployment
 
 Assemblies also enable a deployment model that is difficult or impossible with native components:
 the ability to partition rarely used features into separate files while still treating them as part of the
-same logical component. In practice, an assembly can consist of multiple physical files, where certain
-modules, satellite resource packages, or platform-specific assets are loaded only when required.
+same logical component. In practice, optional features are most commonly shipped as separate assemblies/plugins (often loaded via AssemblyLoadContext) or as satellite resource assemblies (e.g., *.resources.dll). These remain separate assemblies with their own manifests, but can still be versioned and loaded consistently as part of the application’s overall dependency set.
 
 This model is particularly valuable for applications that ship large optional subsystems—help
 systems, images, localization resources, plug-ins, diagnostic modules, or domain-specific extension
