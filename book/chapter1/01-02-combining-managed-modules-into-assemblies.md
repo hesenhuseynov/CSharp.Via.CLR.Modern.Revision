@@ -121,3 +121,15 @@ One of the most painful drawbacks of classic Windows programming was COM registr
 * ✅ **No GAC conflicts** (in .NET Core+ the GAC is gone)
 
 The entire dependency graph is inside the assembly itself. This is why deployment in modern .NET is radically simpler than in .NET Framework or COM.
+
+### On-demand and modular deployment 
+One classic design that assemblies enable is to keep rarely used features or resources in separate files
+that are still part of the same logical assembly. These files can be:
+
+- downloaded on demand (for example, from a web endpoint),
+- loaded only when a specific feature is activated,
+- or shipped as optional “add-on” components.
+
+If the user never triggers that feature, the corresponding files are never downloaded or loaded,
+saving disk space and reducing installation time — while the CLR still treats everything as one
+coherent assembly from an identity/versioning perspective.
