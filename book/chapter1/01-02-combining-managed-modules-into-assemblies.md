@@ -122,14 +122,31 @@ One of the most painful drawbacks of classic Windows programming was COM registr
 
 The entire dependency graph is inside the assembly itself. This is why deployment in modern .NET is radically simpler than in .NET Framework or COM.
 
-### On-demand and modular deployment 
-One classic design that assemblies enable is to keep rarely used features or resources in separate files
-that are still part of the same logical assembly. These files can be:
+### On-demand and modular deployment
 
-- downloaded on demand (for example, from a web endpoint),
-- loaded only when a specific feature is activated,
-- or shipped as optional “add-on” components.
+Assemblies also enable a deployment model that is difficult or impossible with native components:
+the ability to partition rarely used features into separate files while still treating them as part of the
+same logical component. In practice, an assembly can consist of multiple physical files, where certain
+modules, satellite resource packages, or platform-specific assets are loaded only when required.
 
-If the user never triggers that feature, the corresponding files are never downloaded or loaded,
-saving disk space and reducing installation time — while the CLR still treats everything as one
-coherent assembly from an identity/versioning perspective.
+This model is particularly valuable for applications that ship large optional subsystems—help
+systems, images, localization resources, plug-ins, diagnostic modules, or domain-specific extension
+packs. Instead of forcing all users to download or install these components, the application may place
+them into auxiliary files that are retrieved on demand or included only in specific distribution bundles.
+If a user never invokes the associated feature, the corresponding files are never loaded into memory
+or even downloaded, reducing installation size, minimizing I/O overhead, and improving startup time.
+
+Despite the physical separation, all files remain bound together through the assembly’s manifest.
+The manifest defines a unified identity, version, and security boundary for the entire logical assembly,
+ensuring that late-loaded modules are still validated, version-checked, and bound consistently with the
+application’s original dependency graph. The CLR treats all constituent files—whether loaded eagerly
+or lazily—as a single, coherent component with well-defined visibility rules and versioning semantics.
+
+In modern .NET (Core, 5–9), this design works seamlessly with advanced deployment models such
+as single-file publishing, ReadyToRun images, trimming, and NativeAOT. Even when the physical
+structure of a deployed application changes—merged into one file, optimized to native code, or split
+across multiple bundles—the logical assembly identity described by the manifest remains intact. This
+preserves compatibility with reflection, security policies, and assembly binding rules, while still giving
+developers the flexibility to modularize and optimize deployment in ways that were not possible in
+the early CLR era.
+
