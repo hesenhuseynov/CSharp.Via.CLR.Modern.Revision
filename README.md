@@ -59,4 +59,3 @@ This is an **in-progress** project. Chapters evolve as I learn and verify more d
 
 
 
-Add your preferred license here (MIT / CC BY-NC / etc.).
