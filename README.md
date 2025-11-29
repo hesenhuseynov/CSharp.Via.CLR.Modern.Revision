@@ -20,7 +20,7 @@ My goal is to keep the **core fundamentals** intact while updating the explanati
 
 ## 🔍 How it’s written (AI-assisted, author-controlled)
 
-I do use AI tools (ChatGPT/GPT) to:
+I do use AI tools (ChatGPT/GPT/GEMİNİ) to:
 - help rewrite and structure explanations,
 - propose clearer examples and diagrams,
 - catch contradictions and improve readability.
