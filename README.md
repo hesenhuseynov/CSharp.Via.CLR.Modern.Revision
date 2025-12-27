@@ -58,7 +58,4 @@ Each file is written to be readable directly on GitHub.
 This is an **in-progress** project. Chapters evolve as I learn and verify more details.
 
 
-We are back in learning 
-not to the past, but to the fundamentals.
 
-🚀 And yes… WE ARE BACKKK!
